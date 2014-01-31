@@ -59,6 +59,7 @@ public class Board {
 			swapTiles(upBoard, blank_row, blank_col, 'u');	
 			successors.add(upBoard);
 		}
+		return successors;
 	}
 	
 	public void print()
@@ -91,34 +92,35 @@ public class Board {
 	//r - right , l - left, u - up, d - down
 	private void swapTiles(Board board, int row, int col, char direction)
 	{
+		int tempTile;
 		switch(direction)
 		{
 			case 'r':
-				int tempTile = board.tiles[row][col];
+				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row][col+1];
 				board.tiles[row][col+1] = tempTile; 	
 				break;
 			case 'l':
-				int tempTile = board.tiles[row][col];
+				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row][col-1];
 				board.tiles[row][col-1] = tempTile; 	
 				break;
 			case 'u':
-				int tempTile = board.tiles[row][col];
+				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row+1][col];
 				board.tiles[row+1][col] = tempTile; 	
 				break;
 			case 'd':
-				int tempTile = board.tiles[row][col];
+				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row-1][col];
 				board.tiles[row-1][col] = tempTile; 	
 				break;
-		{
+		}
 	}
 
 	//This method will go through this.tiles and find where the blank is. It will set the
 	//local private varabiles to refelect this postion. 
-	public void findBlankPos()
+	private void findBlankPos()
 	{
 		rowsLoop:
 		for (int i = 0 ;i<rows; i++)
