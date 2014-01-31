@@ -32,9 +32,32 @@ public class Board {
 		this.findBlankPos();	
 		
 		//first try and move the blank to the right. If it is a legal move, add it to successors
-		if(blank_col != 0 && tiles[blank_row][blank_col + 1] == -1)
+		if(blank_col != columns-1 && tiles[blank_row][blank_col+1] != -1)
 		{
 			Board rightBoard = new Board(tiles);
+			swapTiles(rightBoard, blank_row, blank_col, 'r');	
+			successors.add(rightBoard);
+		}
+		//Next try and move the blank to the down 
+		if(blank_row != rows-1 && tiles[blank_row+1][blank_col] != -1)
+		{
+			Board downBoard = new Board(tiles);
+			swapTiles(downBoard, blank_row, blank_col, 'd');	
+			successors.add(downBoard);
+		}
+		//Try to move the blank left
+		if(blank_col != 0 && tiles[blank_row][blank_col-1] != -1)
+		{
+			Board leftBoard = new Board(tiles);
+			swapTiles(leftBoard, blank_row, blank_col, 'l');	
+			successors.add(leftBoard);
+		}
+		//Finally try and move the blank Up
+		if(blank_row != 0 && tiles[blank_row-1][blank_col] != -1)
+		{
+			Board upBoard = new Board(tiles);
+			swapTiles(upBoard, blank_row, blank_col, 'u');	
+			successors.add(upBoard);
 		}
 	}
 	
@@ -70,24 +93,32 @@ public class Board {
 	{
 		switch(direction)
 		{
-			case r:
-				
+			case 'r':
+				int tempTile = board.tiles[row][col];
+				board.tiles[row][col] = board.tiles[row][col+1];
+				board.tiles[row][col+1] = tempTile; 	
 				break;
-			case l:
-
+			case 'l':
+				int tempTile = board.tiles[row][col];
+				board.tiles[row][col] = board.tiles[row][col-1];
+				board.tiles[row][col-1] = tempTile; 	
 				break;
-			case u:
-			
+			case 'u':
+				int tempTile = board.tiles[row][col];
+				board.tiles[row][col] = board.tiles[row+1][col];
+				board.tiles[row+1][col] = tempTile; 	
 				break;
-			case d:
-
+			case 'd':
+				int tempTile = board.tiles[row][col];
+				board.tiles[row][col] = board.tiles[row-1][col];
+				board.tiles[row-1][col] = tempTile; 	
 				break;
 		{
 	}
 
 	//This method will go through this.tiles and find where the blank is. It will set the
 	//local private varabiles to refelect this postion. 
-	private void findBlankPos()
+	public void findBlankPos()
 	{
 		rowsLoop:
 		for (int i = 0 ;i<rows; i++)
