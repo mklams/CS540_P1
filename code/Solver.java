@@ -33,7 +33,7 @@ public class Solver {
                     }
                 }
                 initialBoard = new Board(maps);
-                inputReader.readLine();                                     //Reads empty line between Initial state and Goal State
+                inputReader.readLine();    //Reads empty line between Initial state and Goal State
                 //read goal state from file
                 for (int i = 0; i < n; i++) {
                     inputLine = inputReader.readLine();
