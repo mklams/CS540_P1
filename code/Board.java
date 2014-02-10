@@ -2,6 +2,7 @@ import java.util.ArrayList;
 public class Board {
 	public static int rows=5;
 	public static int columns=3;
+	public int cost;
 	private Board parent = null; /* only initial board's parent is null */
 	public int[][] tiles;
 	private int blank_row;
@@ -84,7 +85,7 @@ public class Board {
 	{
 		return parent;
 	}
-	
+
 	//Given a board, a tile position, and direction, this method will swap two tiles. 
 	//WARNING:This method does not do any bounds checking of check if the swap is a leagl move. 
 	//Checking must be done before calling this method. 

@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Comparator;
 public class AStar {
 	 
 	private Board initialState;
@@ -16,16 +18,45 @@ public class AStar {
 	public void search()
 	{
       	/* Declare and initialize Frontier and Explored data structures */ 
+		ArrayList<Board> explored = new ArrayList<Board>();
+		PriorityQueue<Board> frontier = new PriorityQueue<Board>(100, new Comparator<Board>() {
+			public int compare(Board board1, Board board2) {
+				return board1.cost < board2.cost ? 1 : -1;
+			}
+		});
 		/* Put start node in Fringe list Frontier */
-		while (!Frontier.isEmpty())
+		frontier.add(initialState);
+		boolean goalFound = false;
+		while (!frontier.isEmpty() || !goalFound)
 		{
 			/* Remove from Frontier list the node n for which f(n) is minimum */
 			/* Add n to Explored list*/
-
+			Board n = frontier.poll();
+			explored.add(n); 
 			if (n.equals(goalState))
 			{
 				/* Print the solution path and other required information */
 				/* Trace the solution path from goal state to initial state using getParent() function*/
+				ArrayList<Board> solutionPath = new ArrayList<Board>();
+				solutionPath.add(n);
+				Board parent = n.parent;
+				int moveCount = 0;
+				while(parent != null)
+				{
+					solutionPath.add(parent, 0);
+					parent = n.parent;
+					moveCount++;
+				}
+				while(solutionPath.size() != 0)
+				{
+					Board currBoard = solutionPath.remove(0);
+					currBoard.print();
+					System.out.println();
+				}
+				System.out.println(moveCount);
+				System.out.println(explored.size());
+				goalFound = true;
+				break;
 			}
 
 			ArrayList<Board> successors = n.getSuccessors();
