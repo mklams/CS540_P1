@@ -65,10 +65,32 @@ public class Solver {
 	heuristic = args[0];		
 	inputfile = args[1];
         Initialize(inputfile);
+	//Choose heuristic function according to the input argument 0
 	if (heuristic.equals("empty"))
 	{
-        	AStar searcher = new AStar(initialBoard, goalBoard, new EmptyHeuristic());	//Choose heuristic function according to the input argument 0
-        	searcher.search();
+        	AStar searcher = new AStar(initialBoard, goalBoard, new EmptyHeuristic());	        
+		searcher.search();
 	}
+	else if(heuristic.equals("hamming"))
+	{
+		AStar searcher = new AStar(initialBoard, goalBoard, new HammingHeuristic());
+        	searcher.search();
+
+	}
+	else if(heuristic.equals("manhattan"))
+	{
+		AStar searcher = new AStar(initialBoard, goalBoard, new ManhattanHeuristic());
+        	searcher.search();
+
+	}
+	else if(heuristic.equals("own"))
+	{
+		AStar searcher = new AStar(initialBoard, goalBoard, new OwnHeuristic());
+        	searcher.search();
+
+	}
+	else
+		System.out.println("Invalid heuristic");
+
     }
 }

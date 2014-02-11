@@ -64,11 +64,27 @@ public class Test {
         }
 	inputfile = args[0];
         Initialize(inputfile);
-	initialBoard.print();	
+	//initialBoard.print();	
+	PriorityQueue<Board> frontier = new PriorityQueue<Board>(100, new Comparator<Board>(){
+		public int compare(Board board1, Board board2){
+			return board1.cost > board2.cost ? 1 : -1;
+		}
+	});	
 	ArrayList<Board> succ = initialBoard.getSuccessors();
+	succ.add(initialBoard);
+	int cost = 3;
 	for (Board board : succ){
+		//System.out.println();
+		board.cost = cost;
+		cost--;	
+		//board.print();
+		frontier.add(board);
+	}
+	while(frontier.peek() != null){
 		System.out.println();
-		board.print();
+		Board next = frontier.poll();
+		next.print();
+		System.out.println("The cost was: "+next.cost);
 	}
     }
 }
