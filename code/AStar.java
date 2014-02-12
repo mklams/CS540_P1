@@ -25,6 +25,7 @@ public class AStar {
 			}
 		});
 		/* Put start node in Fringe list Frontier */
+		int g = 1; //g is the total cost from moving from parent to child
 		initialState.cost = 0;
 		frontier.add(initialState);
 		boolean goalFound = false;
@@ -65,14 +66,33 @@ public class AStar {
 			for (int i = 0 ;i<successors.size(); i++)
 			{
 				Board n1 = successors.get(i);
-				//First check if n1 hasn't been seen before
-				if(!frontier.contains(n1) && !explored.contains(n1))
+				n1.setParent(n);
+				//Need to iterate through both frontier and explored to see if this board is in
+				//either of them
+				boolean inFrontier = false;
+				Board frontierBoard = null;
+				boolean inExplored = false;
+				Board exploredBoard = null;
+				//First check if board is in frontier
+				for(Board curr : frontier)
 				{
-					
+					if(curr.equals(n1))
+					{
+						inFrontier = true;
+						frontierBoard = curr;
+						break;
+					}
 				}
-				else if(frontier.contains(n1))
+				
+				//Next check if board is in explored
+				for(Board curr : explored)
 				{
-					
+					if(curr.equals(n1))
+					{
+						inExplored = true;
+						exploredBoard = curr;
+						break;
+					}
 				}
 				/* if n1 is not already in either Frontier or Explored
 				      Compute h(n1), g(n1) = g(n)+c(n, n1), f(n1)=g(n1)+h(n1), place n1 in Frontier
@@ -81,9 +101,33 @@ public class AStar {
 				          Replace existing n1 with newly generated g(n1), h(n1), set parent of n1 to n
 				          if n1 is in Explored list
 				              Move n1 from Explored to Frontier list*/
+
+				//First check if n1 hasn't been seen before
+				if(!inFrontier && !inExplored)
+				{
+					int boardCost = heuristic.getCost(n1, goalState); 		
+					n1.cost = boardCost + g;
+					frontier.add(n1);
+				}
+				//else see if n1 has a better cost then what if in frontier or explored
+				else 
+				{
+					if(inFrontier && n1.cost < frontierBoard.cost)
+					{
+						frontier.remove(frontierBoard);
+						frontier.add(n1);
+					}
+					else if(inExplored && n1.cost < exploredBoard.cost)
+					{						
+						explored.remove(exploredBoard);
+						frontier.add(n1);
+					}
+				}
 			}
+			g++;
 		}
-		System.out.println("No Solution");
+		if(!goalFound)
+			System.out.println("No Solution");
 	}
 
 }
