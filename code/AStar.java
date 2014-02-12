@@ -68,7 +68,7 @@ public class AStar {
 				//First check if n1 hasn't been seen before
 				if(!frontier.contains(n1) && !explored.contains(n1))
 				{
-
+					
 				}
 				else if(frontier.contains(n1))
 				{
