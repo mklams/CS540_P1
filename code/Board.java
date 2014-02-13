@@ -3,6 +3,8 @@ public class Board {
 	public static int rows=5;
 	public static int columns=3;
 	public int cost;
+	public int g;
+	public int h;
 	private Board parent = null; /* only initial board's parent is null */
 	public int[][] tiles;
 	private int blank_row;
@@ -27,12 +29,14 @@ public class Board {
 					return false;
 		return true;
 	}
-	public ArrayList<Board> getSuccessors()     //Use cyclic ordering for expanding nodes - Right, Down, Left, Up
+
+	//Use cyclic ordering for expanding nodes - Right, Down, Left, Up
+	public ArrayList<Board> getSuccessors()
 	{
 		ArrayList<Board> successors = new ArrayList<Board>();
 		this.findBlankPos();	
 		
-		//first try and move the blank to the right. If it is a legal move, add it to successors
+	//first try and move the blank to the right. If it is a legal move, add it to successors
 		if(blank_col != columns-1 && tiles[blank_row][blank_col+1] != -1)
 		{
 			Board rightBoard = new Board(tiles);
@@ -75,6 +79,18 @@ public class Board {
 			System.out.println();
 		}
 	}
+
+	public int hashCode()
+	{
+		return cost;
+	}
+
+	public void setCost(int g_n, int h_n)
+	{
+		g = g_n;
+		h = h_n;
+		cost = g+h;
+	}
 	
 	public void setParent(Board parentBoard)
 	{
@@ -87,36 +103,46 @@ public class Board {
 	}
 
 	//Given a board, a tile position, and direction, this method will swap two tiles. 
-	//WARNING:This method does not do any bounds checking of check if the swap is a leagl move. 
+	//Returns true if swap happend. False if trying to swap with -1.
+	//WARNING:This method does not do any bounds checking for out of bounds error 
 	//Checking must be done before calling this method. 
-	//Swap direction -
-	//r - right , l - left, u - up, d - down
-	private void swapTiles(Board board, int row, int col, char direction)
+	//Swap direction: r - right , l - left, u - up, d - down
+	private boolean swapTiles(Board board, int row, int col, char direction)
 	{
 		int tempTile;
+		
 		switch(direction)
 		{
 			case 'r':
+				//if(tiles[row][col+1] == -1)
+				//	return false;
 				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row][col+1];
 				board.tiles[row][col+1] = tempTile; 	
 				break;
 			case 'l':
+				//if(tiles[row][col-1] == -1)
+				//	return false;
 				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row][col-1];
 				board.tiles[row][col-1] = tempTile; 	
 				break;
 			case 'u':
-				tempTile = board.tiles[row][col];
-				board.tiles[row][col] = board.tiles[row+1][col];
-				board.tiles[row+1][col] = tempTile; 	
-				break;
-			case 'd':
+				//if(tiles[row-1][col] == -1)
+				//	return false;
 				tempTile = board.tiles[row][col];
 				board.tiles[row][col] = board.tiles[row-1][col];
 				board.tiles[row-1][col] = tempTile; 	
 				break;
+			case 'd':
+				//if(tiles[row+1][col] == -1)
+				//	return false;
+				tempTile = board.tiles[row][col];
+				board.tiles[row][col] = board.tiles[row+1][col];
+				board.tiles[row+1][col] = tempTile; 	
+				break;
 		}
+		return true;
 	}
 
 	//This method will go through this.tiles and find where the blank is. It will set the

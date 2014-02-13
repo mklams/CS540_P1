@@ -25,8 +25,7 @@ public class AStar {
 			}
 		});
 		/* Put start node in Fringe list Frontier */
-		int g = 1; //g is the total cost from moving from parent to child
-		initialState.cost = 0;
+		initialState.setCost(0, heuristic.getCost(initialState, goalState));
 		frontier.add(initialState);
 		boolean goalFound = false;
 		while (!frontier.isEmpty() && !goalFound)
@@ -47,7 +46,7 @@ public class AStar {
 				while(parent != null)
 				{
 					solutionPath.add(0, parent);
-					parent = n.getParent();
+					parent = parent.getParent();
 					moveCount++;
 				}
 				while(solutionPath.size() != 0)
@@ -103,28 +102,27 @@ public class AStar {
 				              Move n1 from Explored to Frontier list*/
 
 				//First check if n1 hasn't been seen before
+				n1.setCost(n.g + 1, heuristic.getCost(n1, goalState));
+
 				if(!inFrontier && !inExplored)
 				{
-					int boardCost = heuristic.getCost(n1, goalState); 		
-					n1.cost = boardCost + g;
 					frontier.add(n1);
 				}
 				//else see if n1 has a better cost then what if in frontier or explored
 				else 
 				{
-					if(inFrontier && n1.cost < frontierBoard.cost)
+					if(inFrontier && n1.g < frontierBoard.g)
 					{
 						frontier.remove(frontierBoard);
 						frontier.add(n1);
 					}
-					else if(inExplored && n1.cost < exploredBoard.cost)
+					else if(inExplored && n1.g < exploredBoard.g)
 					{						
 						explored.remove(exploredBoard);
 						frontier.add(n1);
 					}
 				}
 			}
-			g++;
 		}
 		if(!goalFound)
 			System.out.println("No Solution");
